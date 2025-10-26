@@ -25,10 +25,10 @@ int main() {
 
     // 2. Scan tokens and classify them
     while (1) {
-        scanNextToken(tokenValue, tokenType);
+        scanNextToken(tokenValue);
+        classifyToken(tokenValue, tokenType);
         if (strcmp(tokenType, "EOF") == 0 || numTokens >= MAX_TOKENS)
             break;
-        classifyToken(tokenValue, tokenType);
         strcpy(tokenList[numTokens].value, tokenValue);
         strcpy(tokenList[numTokens].type, tokenType);
         numTokens++;
