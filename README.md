@@ -56,3 +56,26 @@ then, Keyword
 4. `output_manager` writes all tokens one by one into the output file.
 
 Each team member focuses on a unique stage. All stages connect together to move from raw code input to a structured token output file, enabling further compilation steps.
+
+What is the difference between Member 2 (Scanner) and Member 3 (Token Classifier)?
+Member 2 (Scanner):
+
+Scans the input stream character-by-character.
+
+Groups characters into tokens (words or symbols), such as "if", "x", "123", ":=".
+
+Example: It extracts "if" from the input, but does NOT decide if "if" is a keyword, identifier, etc.
+
+Member 3 (Token Classifier):
+
+Inspects each token string produced by the Scanner.
+
+Decides: Is it a keyword, number, identifier, symbol?
+
+Example: If Scanner gives "if", Token Classifier classifies it as a keyword. "x" becomes identifier. "123" becomes number.
+
+Analogy:
+
+Scanner: Splits a sentence into individual words.
+
+Classifier: Assigns grammatical role (noun, verb, etc.) to each word.
