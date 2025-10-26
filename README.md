@@ -57,25 +57,27 @@ then, Keyword
 
 Each team member focuses on a unique stage. All stages connect together to move from raw code input to a structured token output file, enabling further compilation steps.
 
-What is the difference between Member 2 (Scanner) and Member 3 (Token Classifier)?
-Member 2 (Scanner):
+---
 
-Scans the input stream character-by-character.
+## 🔍 Clarification: Scanner (Member 2) vs. Token Classifier (Member 3)
 
-Groups characters into tokens (words or symbols), such as "if", "x", "123", ":=".
+Understanding the separation of responsibilities between these modules is key for teamwork and proper implementation.
 
-Example: It extracts "if" from the input, but does NOT decide if "if" is a keyword, identifier, etc.
+**Member 2 – Scanner**
+- Scans the input stream character-by-character.
+- Groups characters into tokens/words/symbols such as `"if"`, `"x"`, `"123"`, `":="`.
+- **Example:** Extracts `"if"` from the input stream, but does **not** decide whether `"if"` is a keyword or identifier.
 
-Member 3 (Token Classifier):
+**Member 3 – Token Classifier**
+- Inspects each token string produced by the scanner.
+- Decides the type of token: keyword, number, identifier, symbol, etc.
+- **Example:** If the scanner hands over `"if"`, the token classifier labels it as a **keyword**. `"x"` is labeled as an **identifier**. `"123"` as a **number**.
 
-Inspects each token string produced by the Scanner.
+**Analogy**
+- Scanner: *Splits a sentence into individual words.*
+- Token Classifier: *Assigns grammatical roles (noun, verb, etc.) to each word.*
 
-Decides: Is it a keyword, number, identifier, symbol?
+**This separation keeps your project modular and clean. The scanner finds all tokens; the classifier gives each token its proper label—making later processing much easier.**
 
-Example: If Scanner gives "if", Token Classifier classifies it as a keyword. "x" becomes identifier. "123" becomes number.
+---
 
-Analogy:
-
-Scanner: Splits a sentence into individual words.
-
-Classifier: Assigns grammatical role (noun, verb, etc.) to each word.
