@@ -1,46 +1,69 @@
-#include "input_manager.h"
-#include "scanner.h"
-#include "token_classifier.h"
-#include "output_manager.h"
-#include <stdio.h>
-#include <string.h>
+#include "InputManager.h"
+#include "Scanner.h"
+#include "TokenClassifier.h"
+#include "OutputManager.h"
+#include <iostream>
+#include <vector>
+#include <stdexcept>
 
-#define MAX_TOKENS 1000
-#define MAX_TOKEN_LEN 50
-#define MAX_TYPE_LEN 30
-
-struct Token {
-    char value[MAX_TOKEN_LEN];
-    char type[MAX_TYPE_LEN];
-};
-
+/**
+ * Main function orchestrating the scanning process.
+ * Coordinates input reading, token scanning, classification, and output.
+ */
 int main() {
-    struct Token tokenList[MAX_TOKENS];
-    int numTokens = 0;
-    char tokenValue[MAX_TOKEN_LEN];
-    char tokenType[MAX_TYPE_LEN];
-
-    // 1. Read input file
-    readInput("test.tny");
-
-    // 2. Scan tokens and classify them
-    while (1) {
-        scanNextToken(tokenValue);
-        classifyToken(tokenValue, tokenType);
-        if (strcmp(tokenType, "EOF") == 0 || numTokens >= MAX_TOKENS)
-            break;
-        strcpy(tokenList[numTokens].value, tokenValue);
-        strcpy(tokenList[numTokens].type, tokenType);
-        numTokens++;
+    try {
+        // Create instances of all components
+        InputManager inputManager;
+        Scanner scanner(inputManager);
+        TokenClassifier classifier;
+        OutputManager outputManager;
+        
+        // Vector to store all tokens
+        std::vector<Token> tokenList;
+        
+        // 1. Read input file
+        std::cout << "Reading input file: test.tny..." << std::endl;
+        inputManager.readInput("test.tny");
+        
+        // 2. Scan and classify tokens
+        std::cout << "Scanning tokens..." << std::endl;
+        std::string tokenValue;
+        
+        while (scanner.scanNextToken(tokenValue)) {
+            // Classify the token
+            TokenType tokenType = classifier.classifyToken(tokenValue);
+            std::string typeString = TokenClassifier::tokenTypeToString(tokenType);
+            
+            // Check for EOF
+            if (tokenType == TokenType::END_OF_FILE) {
+                break;
+            }
+            
+            // Store token
+            tokenList.emplace_back(tokenValue, typeString);
+            
+            // Optional: Print progress
+            std::cout << "Found token: " << tokenValue 
+                      << " (" << typeString << ")" << std::endl;
+        }
+        
+        // 3. Write tokens to output file
+        std::cout << "\nWriting tokens to output file..." << std::endl;
+        outputManager.initOutput("tokens.txt");
+        outputManager.writeTokens(tokenList);
+        outputManager.closeOutput();
+        
+        // Summary
+        std::cout << "\n==================================" << std::endl;
+        std::cout << "Scanning complete!" << std::endl;
+        std::cout << "Total tokens scanned: " << tokenList.size() << std::endl;
+        std::cout << "Output written to: tokens.txt" << std::endl;
+        std::cout << "==================================" << std::endl;
+        
+        return 0;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
     }
-
-    // 3. Write tokens to output
-    initOutput("tokens.txt");
-    for (int i = 0; i < numTokens; i++) {
-        writeToken(tokenList[i].value, tokenList[i].type);
-    }
-    closeOutput();
-
-    printf("Scanned %d tokens. Tokens are written to tokens.txt\n", numTokens);
-    return 0;
 }

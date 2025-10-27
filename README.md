@@ -1,172 +1,165 @@
+# C++ TINY Scanner Project
 
-# Scanner Project Life Cycle - README
+This project implements a lexical scanner for the TINY programming language using modern C++.
 
-This README explains the complete life cycle of a TINY language file as it moves through the scanner system, identifying the responsibilities of each team member.
+## Project Structure
 
----
-## 1. Input Reading (Member 1: Input Manager)
-- The process begins when the user provides a text file (e.g., `example.tny`) containing TINY code.
-- Member 1 implements:
-    - `readInput(filename)`: Opens the file and loads all its lines into an internal buffer for processing.
-    - `getNextChar()`: Returns the next character from the buffer each time it's called.
-    - `resetInput()`: Resets the character pointer to the start of the buffer.
-- **Example:** If the input is:
+The scanner is divided into four main components, each implemented as a separate class:
+
+### 1. InputManager (`InputManager.h`)
+Handles reading and managing input from TINY source files.
+- Reads entire file into internal buffer
+- Provides character-by-character access via `getNextChar()`
+- Supports peeking and position reset functionality
+
+### 2. Scanner (`Scanner.h`)
+Extracts tokens from the input stream.
+- Groups characters into meaningful lexemes
+- Skips whitespace and comments
+- Handles identifiers, numbers, and symbols
+- Returns tokens one at a time
+
+### 3. TokenClassifier (`TokenClassifier.h`)
+Determines the type of each token.
+- Classifies tokens as keywords, identifiers, numbers, or operators
+- Uses hash set for efficient keyword lookup
+- Implements type-safe enumeration for token types
+
+### 4. OutputManager (`OutputManager.h`)
+Handles writing tokens to output files.
+- Opens and manages output file stream
+- Writes tokens in format: "value, type"
+- Supports batch writing of token vectors
+
+## Features
+
+✅ **Modern C++ Design**
+- Object-oriented architecture with encapsulated classes
+- STL containers (string, vector, unordered_set)
+- Exception handling for robust error management
+- RAII for automatic resource cleanup
+
+✅ **Type Safety**
+- Enum classes for token types
+- Const correctness throughout
+- No raw pointers or manual memory management
+
+✅ **Comprehensive Documentation**
+- Detailed comments for all public methods
+- Usage examples in header files
+- Clear API design
+
+## TINY Language Keywords
+
+The scanner recognizes the following TINY keywords:
+- `if`, `then`, `else`, `end`
+- `repeat`, `until`
+- `read`, `write`
+
+## Building the Project
+
+### Requirements
+- C++11 or later compiler (g++, clang++, MSVC)
+- Standard C++ library
+
+### Compilation
+```bash
+g++ -std=c++11 -o scanner main.cpp -I.
+```
+
+Or with all warnings enabled:
+```bash
+g++ -std=c++11 -Wall -Wextra -o scanner main.cpp -I.
+```
+
+## Usage
+
+1. Create a TINY source file (e.g., `test.tny`):
 ```
 if x then
- y := 4;
+  y := 4;
+end
 ```
-`getNextChar()` called repeatedly will yield: 'i', 'f', ' ', 'x', etc.
 
----
-## 2. Scanning & Token Building (Member 2: Scanner)
-- Member 2 is responsible for grouping characters into meaningful tokens (words, numbers, symbols).
-- Implements:
-    - `scanNextToken(tokenValue, tokenType)`: Collects characters to make tokens, delegates type detection.
-    - `skipWhitespaceAndComments()`: Skips spaces and any comments to reach next relevant token.
-- **Example:** For the code `if x then`, `scanNextToken()` produces (`tokenValue='if'`, `tokenType='Keyword'`), then (`tokenValue='x'`, `tokenType='Identifier'`), etc.
+2. Run the scanner:
+```bash
+./scanner
+```
 
----
-## 3. Token Classification (Member 3: Token Classifier)
-- Member 3 determines and assigns the correct type for each lexeme.
-- Implements:
-    - `classifyToken(lexeme, tokenType)`: Sets token type (Keyword, Identifier, Number, Symbol).
-    - `isKeyword(lexeme)`: Checks if the string is a reserved word in TINY.
-    - `isNumber(lexeme)`: Checks if the string represents a number.
-- **Example:** `classifyToken('if', type)` => `type='Keyword'`; `isNumber('12')` => `1` (true).
-
----
-## 4. Output Writing (Member 4: Output Manager)
-- Member 4 saves all recognized tokens and their types in an output file for later use.
-- Implements:
-    - `initOutput(filename)`: Opens output file for writing.
-    - `writeToken(tokenValue, tokenType)`: Writes the token and its type to the output file.
-    - `closeOutput()`: Closes the file securely.
-- **Example:** After processing, output file might contain:
+3. Output will be written to `tokens.txt`:
 ```
 if, Keyword
 x, Identifier
 then, Keyword
-```
-
----
-## Full Flow Example
-1. `input_manager` loads source file and serves up characters.
-2. `scanner` consumes characters, builds lexemes, skips irrelevant data.
-3. `token_classifier` categorizes lexemes and sets the appropriate type.
-4. `output_manager` writes all tokens one by one into the output file.
-
-Each team member focuses on a unique stage. All stages connect together to move from raw code input to a structured token output file, enabling further compilation steps.
-
----
-
-## 🔍 Clarification: Scanner (Member 2) vs. Token Classifier (Member 3)
-
-Understanding the separation of responsibilities between these modules is key for teamwork and proper implementation.
-
-**Member 2 – Scanner**
-- Scans the input stream character-by-character.
-- Groups characters into tokens/words/symbols such as `"if"`, `"x"`, `"123"`, `":="`.
-- **Example:** Extracts `"if"` from the input stream, but does **not** decide whether `"if"` is a keyword or identifier.
-
-**Member 3 – Token Classifier**
-- Inspects each token string produced by the scanner.
-- Decides the type of token: keyword, number, identifier, symbol, etc.
-- **Example:** If the scanner hands over `"if"`, the token classifier labels it as a **keyword**. `"x"` is labeled as an **identifier**. `"123"` as a **number**.
-
-**Analogy**
-- Scanner: *Splits a sentence into individual words.*
-- Token Classifier: *Assigns grammatical roles (noun, verb, etc.) to each word.*
-
-**This separation keeps your project modular and clean. The scanner finds all tokens; the classifier gives each token its proper label—making later processing much easier.**
-
----
-
-
-# Data Flow: What Each Member Receives and Outputs
-
----
-
-## Member 1: Input Manager
-**Receives:**
-- The file name for the TINY code (e.g., "test.tny").
-**Outputs:**
-- Provides individual characters, one at a time, from the input file.
-**Example:**
-Input file:
-```
-if x then
-y := 4;
-```
-Call sequence:
-```
-readInput("test.tny") // Loads file
-getNextChar()         // returns: 'i', 'f', ' ', 'x', ' ', 't', ... until EOF
-```
----
-
-## Member 2: Scanner
-**Receives:**
-- Access to the characters from Member 1, through getNextChar()
-**Outputs:**
-- Builds token string (e.g., "if", "x", ":=", "4"), hands to Member 3 for classification.
-**Example:**
-Input character sequence: 'i','f',' ','x',' ',':','=',...
-Output:
-```
-"if"
-"x"
-":="
-"4"
-";"
-```
-Each token is a C string or char array.
----
-
-## Member 3: Token Classifier
-**Receives:**
-- Each token string from the scanner
-**Outputs:**
-- Returns token type as a string (e.g., "Keyword", "Identifier", "AssignmentOperator", "Number")
-- (Best practice: Combine as a struct or pair (token_value, token_type))
-**Example:**
-- Receives "if"  → Classifies as ("if", "Keyword")
-- Receives "x"   → Classifies as ("x", "Identifier")
-- Receives "4"   → Classifies as ("4", "Number")
-- Receives ":="  → Classifies as (":=", "AssignmentOperator")
----
-
-## Member 4: Output Manager
-**Receives:**
-- Array or list of tokens, or individual pairs of (token_value, token_type). Each pair can be stored in a struct:
-```c
-struct Token {
-  char value[50];
-  char type[30];
-};
-```
-Typically receives:
-```c
-struct Token tokenList[] = {
-  {"if", "Keyword"},
-  {"x", "Identifier"},
-  {":=", "AssignmentOperator"},
-  {"4", "Number"},
-  {";", "Semicolon"}
-};
-```
-**Outputs:**
-- Prints each token and its type (writing to file or stdout):
-```
-if, Keyword
-x, Identifier
-:=, AssignmentOperator
+y, Identifier
+:=, Assignment Operator
 4, Number
 ;, Semicolon
+end, Keyword
 ```
-**Example usage (loop over array):**
-```c
-for (int i=0; i<numTokens; i++) {
-  writeToken(tokenList[i].value, tokenList[i].type);
-}
+
+## Token Types
+
+The scanner recognizes the following token types:
+- **KEYWORD**: Reserved words (if, then, else, etc.)
+- **IDENTIFIER**: Variable names
+- **NUMBER**: Integer literals
+- **ASSIGNMENT_OP**: `:=`
+- **COMPARISON_OP**: `<`, `=`
+- **ARITHMETIC_OP**: `+`, `-`, `*`, `/`
+- **SEMICOLON**: `;`
+- **LPAREN/RPAREN**: `(`, `)`
+
+## Implementation Notes
+
+### Member Responsibilities (Original C Version)
+- **Member 1**: InputManager - File reading and character stream
+- **Member 2**: Scanner - Token extraction and grouping
+- **Member 3**: TokenClassifier - Token type determination
+- **Member 4**: OutputManager - Token output to file
+
+### C++ Improvements Over C Version
+1. **Memory Safety**: No buffer overflows, automatic cleanup
+2. **Type Safety**: Enum classes instead of string comparisons
+3. **Error Handling**: Exceptions instead of error codes
+4. **Code Organization**: Classes instead of global functions
+5. **STL Usage**: Modern containers instead of C arrays
+6. **Resource Management**: RAII pattern for files
+
+## Example Program Flow
+
 ```
----
+1. InputManager reads "test.tny" into buffer
+2. Scanner calls getNextChar() repeatedly
+3. Scanner groups characters into tokens
+4. TokenClassifier determines each token's type
+5. OutputManager writes tokens to "tokens.txt"
+```
+
+## Error Handling
+
+The program handles the following errors:
+- File not found (throws runtime_error)
+- File read errors (throws runtime_error)
+- Invalid output file (throws runtime_error)
+
+All errors are caught in main() and reported to stderr.
+
+## Extending the Scanner
+
+To add new token types:
+1. Add enum value to `TokenType` in `TokenClassifier.h`
+2. Update `classifyToken()` method
+3. Update `tokenTypeToString()` method
+4. Add recognition logic in Scanner if needed
+
+To add new keywords:
+1. Update `initializeKeywords()` in TokenClassifier implementation
+
+## License
+
+This project is for educational purposes.
+
+## Authors
+
+Converted from C to C++ for improved safety, maintainability, and modern C++ best practices.
