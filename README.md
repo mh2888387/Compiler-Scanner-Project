@@ -21,7 +21,7 @@ if x then
 ## 2. Scanning & Token Building (Member 2: Scanner)
 - Member 2 is responsible for grouping characters into meaningful tokens (words, numbers, symbols).
 - Implements:
-    - `scanNextToken(tokenValue, tokenType)`: Collects characters to make tokens, delegates type detection.
+    - `scanNextToken(tokenValue)`: Collects characters to make tokens
     - `skipWhitespaceAndComments()`: Skips spaces and any comments to reach next relevant token.
 - **Example:** For the code `if x then`, `scanNextToken()` produces (`tokenValue='if'`, `tokenType='Keyword'`), then (`tokenValue='x'`, `tokenType='Identifier'`), etc.
 
