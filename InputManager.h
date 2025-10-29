@@ -23,7 +23,22 @@ public:
      * 
      * Example: readInput("example.tny") loads entire file into buffer
      */
-    void readInput(const std::string& filename);
+    void readInput(const std::string& filename){
+        this->buffer.clear();
+        this->currentPos = 0;
+        
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("Could not open file: " + filename);
+        }
+        
+        std::string line;
+        while (std::getline(file, line)) {
+            buffer += line + '\n'; // Preserve newlines
+        }
+        
+        file.close();
+    }
     
     /**
      * Returns the next character from the buffer.
@@ -31,25 +46,41 @@ public:
      * 
      * Example: First call returns 'i', second 'f', third ' ', etc.
      */
-    char getNextChar();
+    char getNextChar(){
+        if (this->currentPos < this->buffer.size()) {
+            return this->buffer[this->currentPos++];
+        } else {
+            return -1; // Indicate end of input
+        }
+    }
     
     /**
      * Resets reading position to the beginning of the buffer.
      * Next call to getNextChar() will return the first character again.
      */
-    void resetInput();
+    void resetInput(){
+        this->currentPos = 0;
+    }
     
     /**
      * Checks if there are more characters to read.
      * @return true if more characters available, false otherwise
      */
-    bool hasMoreChars() const;
+    bool hasMoreChars() const {
+        return this->currentPos < this->buffer.size();
+    }
     
     /**
      * Peeks at the next character without advancing position.
      * @return Next character, or EOF if at end
      */
-    char peekNextChar() const;
+    char peekNextChar() const {
+        if (this->currentPos < this->buffer.size()) {
+            return this->buffer[this->currentPos];
+        } else {
+            return -1; // Indicate end of input
+        }
+    }
 };
 
 #endif // INPUT_MANAGER_H
