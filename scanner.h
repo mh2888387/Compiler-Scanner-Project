@@ -15,13 +15,54 @@ private:
     /**
      * Skips whitespace characters (space, tab, newline).
      */
-    void skipWhitespace();
+    void skipWhitespace(){
+        char ch;
+        while(true){
+            ch = inputManager.peekChar();
+            if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') {
+                inputManager.getNextChar(); // Consume whitespace
+            } else {
+                break; // Non-whitespace found
+            }
+        }
+
+    }
     
     /**
      * Skips comments in TINY language.
      * Supports both {multi-line} and single-line // comments.
      */
-    void skipComments();
+    void skipComments(){
+        char ch = inputManager.peekChar();
+        //single line comment 
+        if (ch == '/'){
+            char next = inputManager.peekNextChar();
+            if (next == '/'){
+                //consume both slashes
+                inputManager.getNextChar();
+                inputManager.getNextChar();
+                //skip until end of line
+                while(true){
+                    char curr = inputManager.getNextChar();
+                    if (curr == '\n' || curr == -1){
+                        break;
+                    }
+                }
+            }
+        }
+        //multi line 
+        else if (ch =='{'){
+            while(true){
+                char curr = inputManager.getNextChar();
+                if (curr == -1 || curr == '}'){
+                    break;
+                }
+            }
+        }
+    
+    }
+
+    
     
 public:
     /**
@@ -35,7 +76,11 @@ public:
      * 
      * Example: "  // comment\nx" moves position to 'x'
      */
-    void skipWhitespaceAndComments();
+    void skipWhitespaceAndComments(){
+        skipWhitespace();
+        skipComments();
+        skipWhitespace();
+    }
     
     /**
      * Extracts the next valid token from input.
@@ -47,7 +92,12 @@ public:
      *   Second call: tokenValue="x"
      *   Third call: tokenValue="then"
      */
-    bool scanNextToken(std::string& tokenValue);
+    bool scanNextToken(std::string& tokenValue){
+        skipWhitespaceAndComments();
+
+        char ch = inputManager.getNextChar();
+        
+    }
     
     /**
      * Scans an identifier or keyword (alphanumeric starting with letter).
