@@ -1,6 +1,7 @@
 #ifndef OUTPUT_MANAGER_H
 #define OUTPUT_MANAGER_H
 
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
@@ -39,7 +40,17 @@ public:
      * 
      * Example: initOutput("tokens.txt")
      */
-    void initOutput(const string& filename);
+    ofstream initOutput(const string& filename)
+    {
+        ofstream fileStream(filename);
+        if(!fileStream.is_open())
+        {
+            throw runtime_error("Could not open output file: " + filename);
+        }
+        cout << "Opened output file:" << filename << "\n";
+        return fileStream;
+    }
+
     
     /**
      * Writes a single token to the output file.
@@ -49,24 +60,53 @@ public:
      * Example: writeToken("x", "Identifier")
      *          Output: "x, Identifier"
      */
-    void writeToken(const string& tokenValue, const string& tokenType);
+    void writeToken(ofstream& fileStream, const Token& token)
+    {
+        if(fileStream.is_open())
+        {
+            outputFile << token.value << ", " << token.type << "\n";
+        }
+        else {
+            throw runtime_error("Can not write tokens.\n");
+        }
+    }
     
     /**
      * Writes multiple tokens from a vector.
      * @param tokens - Vector of Token structs
      */
-    void writeTokens(const vector<Token>& tokens);
+    void writeTokens(ofstream& fileStream, const vector<Token>& tokens)
+    {
+        if(fileStream.is_open()){
+            cout << "Writing Tokens...\n";
+            for(const auto& token: tokens)
+            {
+                fileStream << token.value << ", " << token.type << "\n";
+            }
+        } else {
+            throw runtime_error("Can not write tokens.\n");
+        }
+    }
     
     /**
      * Closes the output file and ensures data is flushed.
      */
-    void closeOutput();
+    void closeOutput(ofstream& fileStream)
+    {
+        if(fileStream.is_open()){
+            fileStream.close();
+            cout << "Closed output file.\n";
+        }
+    }
     
     /**
      * Checks if output file is currently open.
      * @return true if file is open, false otherwise
      */
-    bool isOutputOpen() const;
+    bool isOutputOpen(const ofstream& fileStream)
+    {
+        return fileStream.is_open();
+    }
 };
 
 #endif // OUTPUT_MANAGER_H
