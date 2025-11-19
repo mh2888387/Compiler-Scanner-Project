@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
+
+using namespace std;
 
 /**
  * InputManager class handles reading and managing input from TINY source files.
@@ -10,7 +13,7 @@
  */
 class InputManager {
 private:
-    std::string buffer;        // Stores entire file content
+    string buffer;        // Stores entire file content
     size_t currentPos;         // Current reading position
     
 public:
@@ -19,21 +22,21 @@ public:
     /**
      * Reads all lines from the input TINY source file and stores them internally.
      * @param filename - Path to the TINY source file
-     * @throws std::runtime_error if file cannot be opened
+     * @throws runtime_error if file cannot be opened
      * 
      * Example: readInput("example.tny") loads entire file into buffer
      */
-    void readInput(const std::string& filename){
+    void readInput(const string& filename){
         this->buffer.clear();
         this->currentPos = 0;
-        
-        std::ifstream file(filename);
+
+        ifstream file(filename);
         if (!file.is_open()) {
-            throw std::runtime_error("Could not open file: " + filename);
+            throw runtime_error("Could not open file: " + filename);
         }
-        
-        std::string line;
-        while (std::getline(file, line)) {
+
+        string line;
+        while (getline(file, line)) {
             buffer += line + '\n'; // Preserve newlines
         }
         
