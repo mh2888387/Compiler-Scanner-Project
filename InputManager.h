@@ -17,7 +17,7 @@ private:
     size_t currentPos;         // Current reading position
     
 public:
-    InputManager();
+    InputManager(); 
     
     /**
      * Reads all lines from the input TINY source file and stores them internally.
@@ -77,12 +77,21 @@ public:
      * Peeks at the next character without advancing position.
      * @return Next character, or EOF if at end
      */
-    char peekNextChar() const {
+    char peekChar() const {
         if (this->currentPos < this->buffer.size()) {
             return this->buffer[this->currentPos];
         } else {
             return -1; // Indicate end of input
         }
+    
+    }
+    char peekNextChar() const {
+        if (this->currentPos + 1 < this->buffer.size()) {
+            return this->buffer[this->currentPos + 1];
+        } else {
+            return -1; // Indicate end of input
+        }
+    
     }
 };
 

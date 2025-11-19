@@ -5,9 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
-
 using namespace std;
-
 /**
  * Main function orchestrating the scanning process.
  * Coordinates input reading, token scanning, classification, and output.
@@ -45,8 +43,8 @@ int main() {
             tokenList.emplace_back(tokenValue, typeString);
             
             // Optional: Print progress
-            cout << "Found token: " << tokenValue
-                      << " (" << typeString << ")" << endl;
+            cout << "Found token: " << tokenValue 
+                 << " (" << typeString << ")" << endl;
         }
         
         // 3. Write tokens to output file
