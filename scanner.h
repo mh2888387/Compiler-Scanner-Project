@@ -4,6 +4,8 @@
 #include "InputManager.h"
 #include <string>
 
+using namespace std;
+
 /**
  * Scanner class extracts tokens from the input stream.
  * Groups characters into meaningful lexemes (tokens).
@@ -47,25 +49,25 @@ public:
      *   Second call: tokenValue="x"
      *   Third call: tokenValue="then"
      */
-    bool scanNextToken(std::string& tokenValue);
+    bool scanNextToken(string& tokenValue);
     
     /**
      * Scans an identifier or keyword (alphanumeric starting with letter).
      * @param tokenValue - Output parameter for the identifier
      */
-    void scanIdentifier(std::string& tokenValue);
+    void scanIdentifier(string& tokenValue);
     
     /**
      * Scans a number (sequence of digits).
      * @param tokenValue - Output parameter for the number
      */
-    void scanNumber(std::string& tokenValue);
+    void scanNumber(string& tokenValue);
     
     /**
      * Scans operators and special symbols (:=, +, -, *, etc.).
      * @param tokenValue - Output parameter for the symbol
      */
-    void scanSymbol(std::string& tokenValue);
+    void scanSymbol(string& tokenValue);
 };
 
 #endif // SCANNER_H

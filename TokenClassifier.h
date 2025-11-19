@@ -2,8 +2,10 @@
 #define TOKEN_CLASSIFIER_H
 
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 #include <cctype>
+
+using namespace std;
 
  // Token types enumeration for TINY language.
  
@@ -31,7 +33,7 @@ enum class TokenType {
 };
 //  Convert TokenType to printable string
 
-inline std::string tokenTypeToString(TokenType t) {
+inline string tokenTypeToString(TokenType t) {
     switch (t) {
         case TokenType::IF: return "Keyword";
         case TokenType::THEN: return "Keyword";
@@ -64,7 +66,7 @@ inline std::string tokenTypeToString(TokenType t) {
 class TokenClassifier {
 private:
 // Map each keyword to its TokenType
-    std::unordered_map<std::string, TokenType> keywords;
+    unordered_map<string, TokenType> keywords;
 
     void initializeKeywords() {
         keywords["if"] = TokenType::IF;
@@ -88,7 +90,7 @@ public:
     // Input: string lexeme
     // Output: TokenType
     // ------------------------------------------------
-    TokenType classifyToken(const std::string& lexeme) const {
+    TokenType classifyToken(const string& lexeme) const {
         if (lexeme.empty())
             return TokenType::UNKNOWN;
 
@@ -113,7 +115,7 @@ public:
         // ----- Number detection -----
         bool allDigits = true;
         for (char c : lexeme) {
-            if (!std::isdigit(static_cast<unsigned char>(c))) {
+            if (!isdigit(static_cast<unsigned char>(c))) {
                 allDigits = false;
                 break;
             }
@@ -122,9 +124,9 @@ public:
             return TokenType::NUMBER;
 
         // ----- Identifier detection -----
-        if (std::isalpha(static_cast<unsigned char>(lexeme[0]))) {
+        if (isalpha(static_cast<unsigned char>(lexeme[0]))) {
             for (size_t i = 1; i < lexeme.size(); ++i) {
-                if (!std::isalnum(static_cast<unsigned char>(lexeme[i])))
+                if (!isalnum(static_cast<unsigned char>(lexeme[i])))
                     return TokenType::UNKNOWN;
             }
             return TokenType::IDENTIFIER;
