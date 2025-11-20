@@ -71,6 +71,7 @@ inline string tokenTypeToString(TokenType t) {
     switch (t) {
         case TokenType::SEMICOLON:     return "SEMICOLON";
         case TokenType::IF:            return "IF";
+        case TokenType::ELSE:          return "ELSE";
         case TokenType::THEN:          return "THEN";
         case TokenType::END:           return "END";
         case TokenType::REPEAT:        return "REPEAT";
