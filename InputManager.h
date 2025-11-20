@@ -17,7 +17,7 @@ private:
     size_t currentPos;         // Current reading position
     
 public:
-    InputManager(); 
+    InputManager() : buffer(""), currentPos(0) {}
     
     /**
      * Reads all lines from the input TINY source file and stores them internally.

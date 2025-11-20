@@ -1,5 +1,5 @@
 #include "InputManager.h"
-#include "Scanner.h"
+#include "scanner.h"
 #include "TokenClassifier.h"
 #include "OutputManager.h"
 #include <iostream>

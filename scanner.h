@@ -3,6 +3,7 @@
 
 #include "InputManager.h"
 #include <string>
+#include <cctype>
 
 using namespace std;
 
@@ -71,7 +72,7 @@ public:
      * Constructor
      * @param im - Reference to InputManager instance
      */
-    explicit Scanner(InputManager& im);
+    explicit Scanner(InputManager& im) : inputManager(im) {}
     
     /**
      * Skips all whitespace and comments to reach next token.
@@ -105,32 +106,38 @@ public:
         while (inputManager.hasMoreChars()){
             skipWhitespaceAndComments();
 
+            if (!inputManager.hasMoreChars()) {
+                return -1;
+            }
+
             char ch = inputManager.getNextChar();
             if (ch == -1) {
                 return -1; // Indicate EOF
             }
             // Check if character starts an identifier/keyword
-            if (isalpha(ch)) {
+            if (isalpha(static_cast<unsigned char>(ch))) {
                 tokenValue = ch;
                 while(inputManager.hasMoreChars()){
-                    if(isalnum(inputManager.peekChar())){
+                    if(isalnum(static_cast<unsigned char>(inputManager.peekChar()))){
                         tokenValue += inputManager.getNextChar();
                     }
                     else {
                         return 1; // Token found
                     }
                 }
+                return 1;
             }
-            else if (isdigit(ch)){
+            else if (isdigit(static_cast<unsigned char>(ch))){
                 tokenValue = ch ;
                 while (inputManager.hasMoreChars()){
-                    if(isdigit(inputManager.peekChar())){
+                    if(isdigit(static_cast<unsigned char>(inputManager.peekChar()))){
                         tokenValue += inputManager.getNextChar();
                     }
                     else {
                         return 1; // Token found
                     }
                 }
+                return 1;
             }
             else{
                 // Handle symbols and operators
@@ -142,12 +149,11 @@ public:
                     }
                 }
                 return 1; // Token found
-                
-            }
-        
-        }
 
-        
+            }
+
+        }
+        return -1;
     }
     
     /**
