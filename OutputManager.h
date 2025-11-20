@@ -30,8 +30,8 @@ private:
     bool isOpen;                   // File open status
     
 public:
-    OutputManager();
-    ~OutputManager();
+    OutputManager() = default;
+    ~OutputManager() = default;
     
     /**
      * Opens output file for writing tokens.
@@ -64,7 +64,7 @@ public:
     {
         if(fileStream.is_open())
         {
-            outputFile << token.value << ", " << token.type << "\n";
+            fileStream << token.value << ", " << token.type << "\n";
         }
         else {
             throw runtime_error("Can not write tokens.\n");

@@ -1,0 +1,9 @@
+{ Sample TINY program }
+read x;
+// initialize y
+if x < 10 then
+  y := x + 1;
+else
+  y := x - 1;
+end
+write y;
