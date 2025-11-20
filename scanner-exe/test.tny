@@ -7,3 +7,6 @@ else
   y := x - 1;
 end
 write y;
+x + y ;
+x+y;
+x-y;
