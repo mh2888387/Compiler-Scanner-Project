@@ -79,9 +79,16 @@ public:
      * Example: "  // comment\nx" moves position to 'x'
      */
     void skipWhitespaceAndComments(){
-        skipWhitespace();
-        skipComments();
-        skipWhitespace();
+        while (inputManager.peekChar() == ' ' || 
+               inputManager.peekChar() == '\t' || 
+               inputManager.peekChar() == '\n' || 
+               inputManager.peekChar() == '\r' ||
+               inputManager.peekChar() == '/' ||
+               inputManager.peekChar() == '{')
+               {
+                    skipWhitespace();
+                    skipComments(); 
+               }
     }
     
     /**
@@ -94,10 +101,52 @@ public:
      *   Second call: tokenValue="x"
      *   Third call: tokenValue="then"
      */
-    bool scanNextToken(std::string& tokenValue){
-        skipWhitespaceAndComments();
+    char scanNextToken(string& tokenValue){
+        while (inputManager.hasMoreChars()){
+            skipWhitespaceAndComments();
 
-        char ch = inputManager.getNextChar();
+            char ch = inputManager.getNextChar();
+            if (ch == -1) {
+                return -1; // Indicate EOF
+            }
+            // Check if character starts an identifier/keyword
+            if (isalpha(ch)) {
+                tokenValue = ch;
+                while(inputManager.hasMoreChars()){
+                    if(isalnum(inputManager.peekChar())){
+                        tokenValue += inputManager.getNextChar();
+                    }
+                    else {
+                        return 1; // Token found
+                    }
+                }
+            }
+            else if (isdigit(ch)){
+                tokenValue = ch ;
+                while (inputManager.hasMoreChars()){
+                    if(isdigit(inputManager.peekChar())){
+                        tokenValue += inputManager.getNextChar();
+                    }
+                    else {
+                        return 1; // Token found
+                    }
+                }
+            }
+            else{
+                // Handle symbols and operators
+                tokenValue = ch;
+                // Check for two-character operators like ":="
+                if (ch == ':') {
+                    if (inputManager.peekChar() == '=') {
+                        tokenValue += inputManager.getNextChar(); // consume '='
+                    }
+                }
+                return 1; // Token found
+                
+            }
+        
+        }
+
         
     }
     

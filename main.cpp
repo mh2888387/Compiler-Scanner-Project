@@ -29,15 +29,15 @@ int main() {
         cout << "Scanning tokens..." << endl;
         string tokenValue;
         
-        while (scanner.scanNextToken(tokenValue)) {
+        while (scanner.scanNextToken(tokenValue) != -1) {
             // Classify the token
             TokenType tokenType = classifier.classifyToken(tokenValue);
-            string typeString = TokenClassifier::tokenTypeToString(tokenType);
+            string typeString = classifier.tokenTypeToString(tokenType);
             
             // Check for EOF
-            if (tokenType == TokenType::END_OF_FILE) {
-                break;
-            }
+            // if (tokenType == TokenType::END_OF_FILE) {
+            //     break;
+            // }
             
             // Store token
             tokenList.emplace_back(tokenValue, typeString);
@@ -49,9 +49,9 @@ int main() {
         
         // 3. Write tokens to output file
         cout << "\nWriting tokens to output file..." << endl;
-        outputManager.initOutput("tokens.txt");
-        outputManager.writeTokens(tokenList);
-        outputManager.closeOutput();
+        ofstream stream = outputManager.initOutput("tokens.txt");
+        outputManager.writeTokens(stream,tokenList);
+        outputManager.closeOutput(stream);
         
         // Summary
         cout << "\n==================================" << endl;

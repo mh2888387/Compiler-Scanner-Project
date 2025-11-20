@@ -1,0 +1,15 @@
+read x; {input an integer}
+if 0 < x then { don’t compute if x <= 0 }
+fact := 1;
+repeat
+fact := fact * x;
+x := x - 1
+until x = 0;
+write fact {output factorial of x}
+end
+
+// what we may read 
+// 1 -> alpha then isalnum -> {keyword , identifier}
+// 1-> number -> isnum > number
+// 1-> special character -> classify
+// 
