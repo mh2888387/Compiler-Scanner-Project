@@ -12,6 +12,7 @@ using namespace std;
 enum class TokenType {
     SEMICOLON,
     IF,
+    ELSE,
     THEN,
     END,
     REPEAT,
@@ -51,6 +52,7 @@ private:
         keywords["until"] = TokenType::UNTIL;
         keywords["read"] = TokenType::READ;
         keywords["write"] = TokenType::WRITE;
+        keywords["else"] = TokenType::ELSE;
     }
 
 
@@ -65,8 +67,34 @@ public:
     // Input: string lexeme
     // Output: TokenType
     // ------------------------------------------------
-    
 inline string tokenTypeToString(TokenType t) {
+    switch (t) {
+        case TokenType::SEMICOLON:     return "SEMICOLON";
+        case TokenType::IF:            return "IF";
+        case TokenType::ELSE:          return "ELSE";
+        case TokenType::THEN:          return "THEN";
+        case TokenType::END:           return "END";
+        case TokenType::REPEAT:        return "REPEAT";
+        case TokenType::UNTIL:         return "UNTIL";
+        case TokenType::IDENTIFIER:    return "IDENTIFIER";
+        case TokenType::ASSIGN:        return "ASSIGN";
+        case TokenType::READ:          return "READ";
+        case TokenType::WRITE:         return "WRITE";
+        case TokenType::LESSTHAN:      return "LESSTHAN";
+        case TokenType::EQUAL:         return "EQUAL";
+        case TokenType::PLUS:          return "PLUS";
+        case TokenType::MINUS:         return "MINUS";
+        case TokenType::MULT:          return "MULT";
+        case TokenType::DIV:           return "DIV";
+        case TokenType::OPENBRACKET:   return "OPENBRACKET";
+        case TokenType::CLOSEDBRACKET: return "CLOSEDBRACKET";
+        case TokenType::NUMBER:        return "NUMBER";
+        case TokenType::END_OF_FILE:   return "END_OF_FILE";
+        case TokenType::UNKNOWN:       return "UNKNOWN";
+    }
+    return "UNKNOWN";
+}
+inline string tokenCategoryToString(TokenType t) {
     switch (t) {
         case TokenType::IF: return "Keyword";
         case TokenType::THEN: return "Keyword";
