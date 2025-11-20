@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        ".fantomasignore": "ignore",
+        "xstring": "cpp",
+        "cctype": "cpp",
+        "locale": "cpp",
+        "xhash": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "utility": "cpp",
+        "iosfwd": "cpp",
+        "system_error": "cpp"
+    }
+}

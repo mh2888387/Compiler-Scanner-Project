@@ -29,40 +29,15 @@ enum class TokenType {
     OPENBRACKET,       // (
     CLOSEDBRACKET,     // )
     NUMBER,
+    END_OF_FILE,       // EOF
     UNKNOWN
 };
 //  Convert TokenType to printable string
 
-inline string tokenTypeToString(TokenType t) {
-    switch (t) {
-        case TokenType::IF: return "Keyword";
-        case TokenType::THEN: return "Keyword";
-        case TokenType::END: return "Keyword";
-        case TokenType::REPEAT: return "Keyword";
-        case TokenType::UNTIL: return "Keyword";
-        case TokenType::READ: return "Keyword";
-        case TokenType::WRITE: return "Keyword";
-        case TokenType::SEMICOLON: return "Semicolon";
-        case TokenType::ASSIGN: return "Assignment Operator";
-        case TokenType::LESSTHAN: return "Comparison Operator";
-        case TokenType::EQUAL: return "Comparison Operator";
-        case TokenType::PLUS: return "Arithmetic Operator";
-        case TokenType::MINUS: return "Arithmetic Operator";
-        case TokenType::MULT: return "Arithmetic Operator";
-        case TokenType::DIV: return "Arithmetic Operator";
-        case TokenType::OPENBRACKET: return "Left Parenthesis";
-        case TokenType::CLOSEDBRACKET: return "Right Parenthesis";
-        case TokenType::NUMBER: return "Number";
-        case TokenType::IDENTIFIER: return "Identifier";
-        default: return "Unknown";
-    }
-}
 
+// TokenClassifier determines the type of each lexeme.
+// Classifies tokens as keywords, identifiers, numbers, or symbols.
 
-
- // TokenClassifier determines the type of each lexeme.
- // Classifies tokens as keywords, identifiers, numbers, or symbols.
- 
 class TokenClassifier {
 private:
 // Map each keyword to its TokenType
@@ -90,6 +65,32 @@ public:
     // Input: string lexeme
     // Output: TokenType
     // ------------------------------------------------
+    
+inline string tokenTypeToString(TokenType t) {
+    switch (t) {
+        case TokenType::IF: return "Keyword";
+        case TokenType::THEN: return "Keyword";
+        case TokenType::END: return "Keyword";
+        case TokenType::REPEAT: return "Keyword";
+        case TokenType::UNTIL: return "Keyword";
+        case TokenType::READ: return "Keyword";
+        case TokenType::WRITE: return "Keyword";
+        case TokenType::SEMICOLON: return "Semicolon";
+        case TokenType::ASSIGN: return "Assignment Operator";
+        case TokenType::LESSTHAN: return "Comparison Operator";
+        case TokenType::EQUAL: return "Comparison Operator";
+        case TokenType::PLUS: return "Arithmetic Operator";
+        case TokenType::MINUS: return "Arithmetic Operator";
+        case TokenType::MULT: return "Arithmetic Operator";
+        case TokenType::DIV: return "Arithmetic Operator";
+        case TokenType::OPENBRACKET: return "Left Parenthesis";
+        case TokenType::CLOSEDBRACKET: return "Right Parenthesis";
+        case TokenType::NUMBER: return "Number";
+        case TokenType::IDENTIFIER: return "Identifier";
+        case TokenType::END_OF_FILE: return "End of File";
+        default: return "Unknown";
+    }
+}
     TokenType classifyToken(const string& lexeme) const {
         if (lexeme.empty())
             return TokenType::UNKNOWN;
@@ -135,7 +136,7 @@ public:
         return TokenType::UNKNOWN;
     }
    
-  
+    
 };
 
 #endif // TOKEN_CLASSIFIER_H
